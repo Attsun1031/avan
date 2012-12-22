@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  asin: MyString
+  category: MyString
+  name: MyString
+  artist: MyString
+  publisher: MyString
+  image_path: MyString
+  review: MyText
+  tracks: MyText
+  release_date: 2012-12-02
+
+two:
+  asin: MyString
+  category: MyString
+  name: MyString
+  artist: MyString
+  publisher: MyString
+  image_path: MyString
+  review: MyText
+  tracks: MyText
+  release_date: 2012-12-02

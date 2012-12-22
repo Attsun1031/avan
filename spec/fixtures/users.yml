@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: atsumi
+  birthday: 1982-12-02
+  sex: 0
+  profile: my profile
+  image_path: /img/atsumi.png
+  twitter_id: 123456789
+  mail_address: atsumi@tatsuya.jp
+  password_digest: d513a50960e09c3b15c9e2ca20937719dbb610df   # raw value is 'atsumi1031'
+  last_login_datetime: 2012-12-02 15:56:24
+  registered_datetime: 2012-12-02 15:56:24

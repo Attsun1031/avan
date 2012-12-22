@@ -1,0 +1,11 @@
+<%= content_for :head do %>
+  <%= stylesheet_link_tag "login/common", :media => "all" %>
+<% end %>
+<h1>Login</h1>
+<form id="login" action="/login/authenticate" method="POST">
+  <label for"user_name">ユーザー名</label>
+  <input type="text" id="user_name" name="user_name" />
+  <label for"user_name">パスワード</label>
+  <input type="password" id="user_pass" name="user_pass" />
+  <input type="submit" id="login" name="login" value="ログイン" />
+</form>
