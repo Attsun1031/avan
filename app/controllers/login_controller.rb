@@ -1,6 +1,10 @@
 class LoginController < ApplicationController
   # show login page
   def show
+    if session[:login_user_id] != nil
+      # already logged in
+      redirect_to "/"
+    end
   end
 
   # do login authentication

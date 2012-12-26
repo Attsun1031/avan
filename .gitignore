@@ -17,3 +17,9 @@
 *.swp
 *~
 .DS_Store
+
+# Ignore unit test
+/test
+
+# Ignore auth
+/app/models/auth_infos.rb

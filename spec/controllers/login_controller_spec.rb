@@ -2,9 +2,19 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe LoginController do
   describe "GET 'show'" do
-    it "should be successful" do
-      get 'show'
-      response.should be_success
+    context "before authenticated" do
+      it "should be successful" do
+        get 'show'
+        response.should be_success
+      end
+    end
+
+    context "after authenticated" do
+      it "should redirect to the index path" do
+        session[:login_user_id] = 1
+        get 'show'
+        response.should redirect_to('/')
+      end
     end
   end
 
