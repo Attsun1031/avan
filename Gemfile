@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.7'
+gem 'rails'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -40,13 +40,19 @@ gem 'unicorn'
 # To use debugger
 # gem 'debugger'
 
+# for development
+group :development do
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'database_cleaner'
+end
+
 # for test
-gem 'rspec-rails'
 group :test do
-  gem 'cucumber-rails'
+  gem 'cucumber-rails', :require => false
   gem 'cucumber'
   gem 'webrat'
   gem 'cucumber-rails-training-wheels'
-  gem 'database_cleaner'
 end
 

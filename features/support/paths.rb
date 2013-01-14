@@ -23,7 +23,10 @@ module NavigationHelpers
     #   when /^(.*)'s profile page$/i
     #     user_profile_path(User.find_by_login($1))
     when /^(the )?login\s?page$/
-      '/login/show'
+      '/login'
+
+    when /^(the )?rack index\s?page$/
+      '/rack'
 
     else
       begin

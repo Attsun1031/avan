@@ -1,8 +1,12 @@
 require 'spec_helper'
 
-describe "/login/show" do
+describe "/login/index" do
   before(:each) do
     render
+  end
+
+  before(:each) do
+    flash[:referer] = '/'
   end
 
   it "should has h1 tag" do
@@ -18,6 +22,10 @@ describe "/login/show" do
   end
 
   it "should has submit button" do
-    assert_select('form#login input#login[type=submit][name="login"]')
+    assert_select('form#login input[type=submit]')
+  end
+
+  it "should has referer hidden tag" do
+    assert_select('form#login input[type=hidden][id="referer"]')
   end
 end

@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   def self.authenticate(user_name, password)
     digest = self.create_digest(password)
     user = where(:name => user_name, :password_digest => digest)
-    if user
+    if user != nil and user.length > 0
       return user[0]
     else
       return nil
