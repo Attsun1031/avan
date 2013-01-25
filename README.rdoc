@@ -1,4 +1,4 @@
 == Project Avan
 
-Project Avan is cd management application.
+Project Avan is cd rack management application.
 This app is for my Ruby & rails training.
