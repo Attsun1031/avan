@@ -56,3 +56,4 @@ group :test do
   gem 'cucumber-rails-training-wheels'
 end
 
+gem 'amazon-ecs'

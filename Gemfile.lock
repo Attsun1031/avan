@@ -29,6 +29,9 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.3.2)
+    amazon-ecs (2.2.4)
+      nokogiri (~> 1.4)
+      ruby-hmac (~> 0.3)
     arel (3.0.2)
     builder (3.0.4)
     capybara (2.0.2)
@@ -135,6 +138,7 @@ GEM
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
       rspec-mocks (~> 2.12.0)
+    ruby-hmac (0.4.0)
     rubyzip (0.9.9)
     sass (3.2.5)
     sass-rails (3.2.5)
@@ -183,6 +187,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  amazon-ecs
   capybara
   coffee-rails (~> 3.2.1)
   cucumber
