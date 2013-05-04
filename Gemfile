@@ -21,6 +21,8 @@ group :assets do
   gem 'execjs'
   gem 'therubyracer'
   gem 'libv8', '~> 3.11.8'
+  gem 'slim', :require => 'slim-rails'
+  gem "slim-rails"
 end
 
 gem 'jquery-rails'
