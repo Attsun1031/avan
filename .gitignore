@@ -22,4 +22,4 @@
 /test
 
 # Ignore auth
-/app/models/auth_infos.rb
+/config/secrets.yml
