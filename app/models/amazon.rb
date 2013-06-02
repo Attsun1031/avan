@@ -13,14 +13,25 @@ module Amazon
       :response_group => 'ItemAttributes,Images'
     }
 
-    def self.search_item query, options = {}
+    # call item_search API
+    def self.search_items query, options = {}
       merged_opionts = @@options.merge options
       Amazon::Ecs.item_search query, merged_opionts
     end
 
-    def self.search_music query, options = {}
+    # call item_lookup API
+    def self.lookup_items item_ids, options = {}
+      unless item_ids.is_a? Array
+        item_ids = [item_ids]
+      end
+      merged_opionts = @@options.merge options
+      Amazon::Ecs.item_lookup item_ids.join(','), merged_opionts
+    end
+
+    # find items related to music
+    def self.search_music_items query, options = {}
       merged_opionts = options.merge({ :search_index => 'Music' })
-      self.search_item query, merged_opionts
+      self.search_items query, merged_opionts
     end
   end
 end
