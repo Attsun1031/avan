@@ -11,24 +11,33 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121202072606) do
+ActiveRecord::Schema.define(:version => 20130602132401) do
 
-  create_table "albums", :force => true do |t|
+  create_table "list_items", :force => true do |t|
+    t.integer  "user_id",                       :null => false
+    t.integer  "product_id",                    :null => false
+    t.boolean  "checked",    :default => false, :null => false
+    t.text     "comment"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  add_index "list_items", ["product_id"], :name => "index_list_items_on_product_id"
+  add_index "list_items", ["user_id"], :name => "index_list_items_on_user_id"
+
+  create_table "products", :force => true do |t|
     t.string   "asin",         :null => false
-    t.string   "category",     :null => false
-    t.string   "name",         :null => false
-    t.string   "artist",       :null => false
+    t.string   "title",        :null => false
+    t.string   "creater_name"
     t.string   "publisher"
+    t.string   "category"
     t.string   "image_path"
-    t.text     "review"
-    t.text     "tracks"
-    t.date     "release_date"
+    t.text     "attribute"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
   end
 
-  add_index "albums", ["artist"], :name => "index_albums_on_artist"
-  add_index "albums", ["asin"], :name => "index_albums_on_asin", :unique => true
+  add_index "products", ["asin"], :name => "index_products_on_asin"
 
   create_table "rack_items", :force => true do |t|
     t.integer  "user_id",                 :null => false
