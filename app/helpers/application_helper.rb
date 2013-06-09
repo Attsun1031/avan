@@ -4,10 +4,12 @@ module ApplicationHelper
 
   # ログイン情報エリアを構築する
   def login_info
+    text = "ログイン／新規登録"
+    path = "/login"
     if session[:login_user_id] != nil
-      link_to "ログアウト", "/login/destroy"
-    elsif
-      link_to "ログイン", "/login"
+      text = "ログアウト"
+      path ="/login/destroy"
     end
+    link_to text, path
   end
 end

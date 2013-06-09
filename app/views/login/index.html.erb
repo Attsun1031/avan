@@ -1,12 +1,20 @@
 <%= content_for :head do %>
   <%= stylesheet_link_tag "login/common", :media => "all" %>
 <% end %>
-<h1>Login</h1>
-<form id="login" action="/login/authenticate" method="POST">
-  <label for"user_name">ユーザー名</label>
-  <%= text_field_tag :user_name %>
-  <label for"user_pass">パスワード</label>
-  <%= password_field_tag :user_pass %>
-  <%= hidden_field_tag :referer, flash[:referer] %>
-  <%= submit_tag "ログイン" %>
-</form>
+<div class="double-pane-container">
+  <div class="login left-pane">
+    <form id="login" action="/login/authenticate" method="POST">
+      <label for"user_name">ユーザー名</label>
+      <%= text_field_tag :user_name %>
+      <label for"user_pass">パスワード</label>
+      <%= password_field_tag :user_pass %>
+      <%= hidden_field_tag :referer, flash[:referer] %>
+      <%= submit_tag "ログイン" %>
+    </form>
+  </div>
+
+  <div class="register right-pane">
+    <h2><%= link_to "新規登録はこちら", "/register" %></h2>
+  </div>
+</div>
+<div class="clear-left"></div>
