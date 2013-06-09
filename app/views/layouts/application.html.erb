@@ -48,9 +48,11 @@
           <a class="brand" href="#">Avan</a>
           <div class="container-fluid nav-collapse">
             <ul class="nav">
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
+              <li><%= link_to "CDを探す", "/path1" %></li>
+              <li><%= link_to "リスト切替", "/path2" %></li>
+              <li><%= link_to "リスト管理", "/path2" %></li>
+              <li><%= link_to "アカウント設定", "/path3" %></li>
+              <li><%= login_info %></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -59,16 +61,6 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
-            </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
         <div class="span9">
           <%= bootstrap_flash %>
           <%= yield %>
