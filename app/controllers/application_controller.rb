@@ -2,12 +2,12 @@
 
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :check_logined
+  before_filter :require_logined
 
   private
   # ログインチェックを行うフィルタ
   # 有効なログインがない場合はログインページにリダイレクトする。
-  def check_logined
+  def require_logined
     # ユーザーをロード
     if session[:login_user_id] != nil
       begin
@@ -21,6 +21,14 @@ class ApplicationController < ActionController::Base
     unless @user
       flash[:referer] = request.fullpath
       redirect_to :controller => 'login', 'action' => 'index'
+    end
+  end
+
+  # ログインしていないことをチェックするフィルタ
+  # ログインしている場合はルート URL にリダイレクト
+  def require_not_logined
+    if session[:login_user_id] != nil
+      redirect_to root_url
     end
   end
 end

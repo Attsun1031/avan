@@ -2,13 +2,8 @@
 
 # ログインセッション管理
 class LoginController < ApplicationController
-  skip_filter :check_logined
-
-  def index
-    if session[:login_user_id] != nil
-      redirect_to root_url
-    end
-  end
+  before_filter :require_not_logined, :except => "destroy"
+  skip_filter :require_logined, :except => "destroy"
 
   # ログイン認証を行う
   def authenticate
@@ -25,7 +20,7 @@ class LoginController < ApplicationController
 
   # ログインセッションを破棄する
   def destroy
-    session[:login_user_id] = nil
+    reset_session
     redirect_to :action => 'index'
   end
 end

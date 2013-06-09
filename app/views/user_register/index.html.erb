@@ -1,0 +1,29 @@
+<%= content_for :head do %>
+  <%= stylesheet_link_tag "login/common", :media => "all" %>
+<% end %>
+<h1>ユーザー登録</h1>
+<%= form_tag({ :controller => "user_register", :action => "register" }) do %>
+  <div class="field">
+    <%= label_tag :name, "ユーザー名" %><br />
+    <%= text_field_tag :name %>
+  </div>
+  <div class="field">
+    <%= label_tag :birthday, "生年月日" %><br />
+    <%= date_select :birthday, :date, :use_month_numbers => true, :start_year => 1920, :end_year => Time.now.year - 10 %>
+  </div>
+  <div class="field">
+    <%= label_tag :sex, "性別" %><br />
+    <%= select_tag :sex, options_for_select([["男性", 0], ["女性", 1], ["その他", 2]]) %>
+  </div>
+  <div class="field">
+    <%= label_tag :password, "パスワード" %><br />
+    <%= password_field_tag :password %>
+  </div>
+  <div class="field">
+    <%= label_tag :password_for_confirmation, "パスワード（確認用）" %><br />
+    <%= password_field_tag :password_for_confirmation %>
+  </div>
+  <div class="actions">
+    <%= submit_tag "登録" %>
+  </div>
+<% end %>
