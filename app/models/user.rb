@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class User < ActiveRecord::Base
 
   USER_SALT = '_avan1201'
@@ -15,8 +17,13 @@ class User < ActiveRecord::Base
     end
   end
 
-  def set_password password
-    @password_digest = self.class.create_digest password
+  def self.create_new_user params
+    user = self.new
+    user.name = params[:name]
+    user.birthday = params[:birthday]
+    user.sex = params[:sex]
+    user.password_digest = self.create_digest params[:password]
+    return user
   end
 
   protected
