@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
   USER_SALT = '_avan1201'
 
   attr_accessible :birthday, :image_path, :last_login_datetime, :mail_address, :name, :password_digest, :profile, :registered_datetime, :sex, :twitter_id
-  validates_presence_of :name
+  validates :name, :presence => { :message => 'ユーザー名を入力してください。' }
+  validates :password_digest, :presence => { :message => 'パスワードを入力してください。' }
 
   def self.authenticate user_name, password
     digest = self.create_digest password
@@ -28,6 +29,9 @@ class User < ActiveRecord::Base
 
   protected
   def self.create_digest password
+    if password.blank?
+      return nil
+    end
     return Digest::SHA1.hexdigest(password + USER_SALT)
   end
 end

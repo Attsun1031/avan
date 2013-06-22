@@ -12,4 +12,8 @@ module ApplicationHelper
     end
     link_to text, path
   end
+
+  def format_errors errors
+    errors.join "\n"
+  end
 end

@@ -14,6 +14,7 @@ class LoginController < ApplicationController
       redirect_to redirect_path
     else
       flash.now[:referer] = params[:referer]
+      flash[:error] = 'ユーザー名とパスワードが一致しません。'
       redirect_to :action => 'index'
     end
   end

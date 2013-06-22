@@ -1,4 +1,12 @@
 <h1>ユーザー登録</h1>
+<% if session[:register_user] != nil && session[:register_user].errors.size > 0 %>
+  <ul>
+    <% session[:register_user].errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
+<% end %>
+
 <%= form_tag({ :controller => "user_register", :action => "confirm" }) do %>
   <div class="field">
     <%= label_tag :name, "ユーザー名" %><br />
@@ -17,8 +25,8 @@
     <%= password_field_tag :password %>
   </div>
   <div class="field">
-    <%= label_tag :password_for_confirmation, "パスワード（確認用）" %><br />
-    <%= password_field_tag :password_for_confirmation %>
+    <%= label_tag :password_for_check, "パスワード（確認用）" %><br />
+    <%= password_field_tag :password_for_check %>
   </div>
   <div class="actions">
     <%= submit_tag "登録", { :class => "btn" } %>
