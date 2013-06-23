@@ -6,7 +6,7 @@ describe 'Amazon::API' do
   describe 'search item' do
     it 'should call api without error' do
       res = Amazon::API.search_music_items 'サザン'
-      res.is_valid_request?.should be_true
+      res[0].creater_name.should == "サザンオールスターズ"
     end
   end
 

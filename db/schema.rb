@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130609081016) do
+ActiveRecord::Schema.define(:version => 20130623084438) do
 
   create_table "check_lists", :force => true do |t|
     t.integer  "user_id"
@@ -36,15 +36,16 @@ ActiveRecord::Schema.define(:version => 20130609081016) do
   add_index "list_items", ["product_id"], :name => "index_list_items_on_product_id"
 
   create_table "products", :force => true do |t|
-    t.string   "asin",         :null => false
-    t.string   "title",        :null => false
-    t.string   "creater_name"
-    t.string   "publisher"
+    t.string   "asin",            :null => false
     t.string   "category"
-    t.string   "image_path"
-    t.text     "attribute"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.string   "creater_name"
+    t.string   "image_url"
+    t.string   "publisher"
+    t.string   "title",           :null => false
+    t.text     "item_attributes"
+    t.string   "item_url",        :null => false
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   add_index "products", ["asin"], :name => "index_products_on_asin"

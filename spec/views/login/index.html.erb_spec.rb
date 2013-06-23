@@ -9,10 +9,6 @@ describe "/login/index" do
     flash[:referer] = '/'
   end
 
-  it "should has h1 tag" do
-    assert_select('h1')
-  end
-
   it "should has user_name input tag" do
     assert_select('form#login input[type=text][name="user_name"]')
   end
