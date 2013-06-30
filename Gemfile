@@ -38,7 +38,8 @@ gem 'unicorn'
 # gem 'capistrano'
 
 # To use debugger
-# gem 'debugger'
+gem 'debugger'
+#gem 'ruby-debug19'
 
 # for development
 group :development do
@@ -46,6 +47,7 @@ group :development do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'database_cleaner'
+  gem 'pry-rails'
 end
 
 # for test
