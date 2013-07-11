@@ -1,0 +1,10 @@
+<% content_for :head do %>
+ <link rel="stylesheet" type="text/css" href="/stylesheets/item_search.css" />
+<% end -%>
+
+<div class="container item-search">
+  <%= form_tag({ :controller => "item_search", :action => "search" }) do %>
+    <%= text_field_tag :query, '', { :class => 'input-medium search-query', :placeholder => 'キーワードを入力して検索！' } %>
+    <%= submit_tag "検索", { :class => "btn" } %>
+  <% end %>
+</div>
