@@ -1,5 +1,7 @@
 # coding: utf-8
 
+# TODO: 入力値バリデーションを Itemsearchform のようにしたい。
+
 require 'date'
 
 
