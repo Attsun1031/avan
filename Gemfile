@@ -59,3 +59,5 @@ group :test do
 end
 
 gem 'amazon-ecs'
+gem 'backbone-on-rails'
+gem 'requirejs-rails'
