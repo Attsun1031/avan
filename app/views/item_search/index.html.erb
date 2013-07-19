@@ -3,8 +3,11 @@
 <% end -%>
 
 <div class="container item-search">
-  <%= form_tag({ :controller => "item_search", :action => "search" }) do %>
-    <%= text_field_tag :query, '', { :class => 'input-medium search-query', :placeholder => 'キーワードを入力して検索！' } %>
-    <%= submit_tag "検索", { :class => "btn" } %>
+  <%= form_tag({ :controller => "item_search", :action => "search" }, { :id => "search_form" }) do %>
+    <%= text_field_tag :query, '',{ :class => 'input-medium search-query', :placeholder => 'キーワードを入力して検索！' } %>
+    <%= submit_tag "検索", { :id => 'search_btn', :class => "btn" } %>
   <% end %>
+</div>
+
+<div class="container" id="products_area">
 </div>
