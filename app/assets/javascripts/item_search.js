@@ -1,3 +1,3 @@
-require(["jquery", "backbone"], function($, Backbone) {
-  console.dir("--- Start item search ---");
+require(["views/item_search_view"], function(ItemSearchView) {
+  var view = new ItemSearchView();
 });

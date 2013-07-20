@@ -2,12 +2,25 @@
   <%= requirejs_include_tag "item_search" %>
 <% end -%>
 
-<div class="container item-search">
-  <%= form_tag({ :controller => "item_search", :action => "search" }, { :id => "search_form" }) do %>
-    <%= text_field_tag :query, '',{ :class => 'input-medium search-query', :placeholder => 'キーワードを入力して検索！' } %>
-    <%= submit_tag "検索", { :id => 'search_btn', :class => "btn" } %>
-  <% end %>
+<div id="item_search">
+  <div class="container item_search_form_area">
+    <%= form_tag({}, { :id => "search_form" }) do %>
+      <%= text_field_tag :query, '',{ :class => 'input-medium search-query', :placeholder => 'キーワードを入力して検索！' } %>
+      <%= submit_tag "検索", { :id => 'search_btn', :class => "btn" } %>
+    <% end %>
+  </div>
+
+  <div class="row-fluid" id="products_area">
+  </div>
 </div>
 
-<div class="container" id="products_area">
-</div>
+<script type="text/template" id="product_template">
+  <div class="row-fluid" id="products_area">
+    <div class="span6 offset3">
+      <ul>
+        <li>{{= title }}</li>
+        <li>{{= creater_name }}</li>
+      </ul>
+    </div>
+  </div>
+</script>

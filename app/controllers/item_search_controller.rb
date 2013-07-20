@@ -5,10 +5,11 @@ require 'amazon'
 # 検索画面コントローラー
 class ItemSearchController < ApplicationController
   def search
+    # TODO: エラーのときも json で返す
     form = ItemSearchForm.new params
     if form.valid?
       items = Amazon::API.search_music_items form.query
-      render :json => items
+      render :json => items.products
     elsif
       flash.now[:error] = form.errors.messages.values.collect { |e| e[0] }
       render :action => :index
