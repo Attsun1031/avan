@@ -43,7 +43,7 @@ module Amazon
   # API の結果を保持するオブジェクト
   # アイテム情報は Product オブジェクトとして保持される。
   class ApiResult
-    attr_reader :error, :current_page, :total_pages, :total_results, :products
+    attr_reader :error, :current_page, :total_pages, :total_results, :products, :row_response
 
     def initialize ecs_response
       @is_valid_request = ecs_response.is_valid_request?
@@ -53,6 +53,7 @@ module Amazon
       @total_results = ecs_response.total_results
       @current_page = ecs_response.item_page
       @products = convert2products ecs_response.items
+      @row_response = ecs_response
     end
 
     def is_valid_request?
@@ -81,6 +82,7 @@ module Amazon
 
   # API からのレスポンスを Product オブジェクトに変換する。
   module EcsResponseConverter
+
     def self.convert ecs_item
       category = ecs_item.get "ItemAttributes/Binding"
       if not @@category_converter_map.include? category
@@ -98,10 +100,11 @@ module Amazon
         product = Product.new
         product.asin = ecs_item.get "ASIN"
         product.category = ecs_item.get "ItemAttributes/Binding"
-        product.image_url = ecs_item.get "SmallImage/URL"
+        product.image_url = ecs_item.get "MediumImage/URL"
         product.publisher = ecs_item.get "ItemAttributes/Publisher"
         product.title = ecs_item.get "ItemAttributes/Title"
         product.item_url = ecs_item.get "DetailPageURL"
+        product.release_date = ecs_item.get "ItemAttributes/ReleaseDate"
         do_convert product, ecs_item
         return product
       end

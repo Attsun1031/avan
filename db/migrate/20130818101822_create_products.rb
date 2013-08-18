@@ -9,6 +9,7 @@ class CreateProducts < ActiveRecord::Migration
       t.string :title, :null => false
       t.text :item_attributes
       t.string :item_url, :null => false
+      t.date :release_date
 
       t.timestamps
     end

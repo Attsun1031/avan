@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130623084438) do
+ActiveRecord::Schema.define(:version => 20130818101822) do
 
   create_table "check_lists", :force => true do |t|
     t.integer  "user_id"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(:version => 20130623084438) do
     t.string   "title",           :null => false
     t.text     "item_attributes"
     t.string   "item_url",        :null => false
+    t.date     "release_date"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end
