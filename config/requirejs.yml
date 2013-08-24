@@ -4,4 +4,3 @@ shim:
     exports: Backbone
   underscore:
     exports: _
-

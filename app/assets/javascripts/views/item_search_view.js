@@ -42,6 +42,12 @@ define(['models/products', 'backbone'], function(Products) {
 
     initialize: function(options) {
       this.listenTo(this.collection, 'reset', this.render);
+      this.listenTo(this.collection, 'add', this.onAdd);
+    },
+
+    onAdd: function(product) {
+      var product_view = new ProductView({ model: product });
+      this.$el.append(product_view.render().el);
     },
 
     render: function(products) {
@@ -60,15 +66,49 @@ define(['models/products', 'backbone'], function(Products) {
   var ItemSearchView = Backbone.View.extend({
     el: "#item_search",
 
+    touchThreshold: 35,
+
     initialize: function(options) {
       this.form = new SearchFormView();
-      this.products = new Products();
-      this.list_view = new ProductListView({ collection: this.products });
       this.listenTo(this.form, "submit_search_form", this.search);
+      this.products = [];
+      this.list_view = undefined;
+      this.in_loading = false;
+
+      var thisTop = this.$el.offset().top,
+      self = this;
+      $(window).scroll(function() {
+        if (self.in_loading) {
+          return;
+        }
+        var thisHeight = self.$el.height(),
+        thisBottom = thisTop + thisHeight,
+        nowBottom = $(window).scrollTop() + $(window).height();
+        if (nowBottom >= (thisBottom + self.touchThreshold)) {
+          self.in_loading = true;
+          self.next();
+        }
+      });
     },
 
     search: function(query) {
+      this.resetCollections();
       this.products.fetch({ data: { query: query }, reset: true });
+    },
+
+    resetCollections: function() {
+      this.in_loading = false;
+      this.products = new Products();
+      this.list_view = new ProductListView({ collection: this.products });
+      this.listenTo(this.products, 'add', this.afterLoading);
+    },
+
+    afterLoading: function() {
+      this.in_loading = false;
+    },
+
+    next: function() {
+      this.products.next();
     }
   });
 
