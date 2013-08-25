@@ -42,22 +42,22 @@ define(['models/products', 'backbone'], function(Products) {
 
     initialize: function(options) {
       this.listenTo(this.collection, 'reset', this.render);
-      this.listenTo(this.collection, 'add', this.onAdd);
+      this.listenTo(this.collection, 'add', this.render_each_model);
     },
 
-    onAdd: function(product) {
+    render_each_model: function(product) {
+      // 各アイテムのレンダリング
       var product_view = new ProductView({ model: product });
       this.$el.append(product_view.render().el);
     },
 
     render: function(products) {
+      // アイテムを空にした上でレンダリング
       // TODO: response の妥当性をチェックする
-      // TODO: ページネーションをなんとかする
       var self = this;
       this.$el.empty();
       products.each(function(product) {
-        var product_view = new ProductView({ model: product });
-        self.$el.append(product_view.render().el);
+        self.render_each_model(product);
       });
     }
   });
@@ -66,49 +66,52 @@ define(['models/products', 'backbone'], function(Products) {
   var ItemSearchView = Backbone.View.extend({
     el: "#item_search",
 
-    touchThreshold: 35,
+    touch_threshold: 35,
 
     initialize: function(options) {
       this.form = new SearchFormView();
-      this.listenTo(this.form, "submit_search_form", this.search);
+      this.listenTo(this.form, "submit_search_form", this.reload);
       this.products = [];
       this.list_view = undefined;
       this.in_loading = false;
+      this.viewTop = this.$el.offset().top;
 
-      var thisTop = this.$el.offset().top,
-      self = this;
-      $(window).scroll(function() {
-        if (self.in_loading) {
-          return;
-        }
-        var thisHeight = self.$el.height(),
-        thisBottom = thisTop + thisHeight,
-        nowBottom = $(window).scrollTop() + $(window).height();
-        if (nowBottom >= (thisBottom + self.touchThreshold)) {
-          self.in_loading = true;
-          self.next();
-        }
-      });
+      $(window).scroll(_.bind(this.next, this));
     },
 
-    search: function(query) {
-      this.resetCollections();
-      this.products.fetch({ data: { query: query }, reset: true });
-    },
-
-    resetCollections: function() {
-      this.in_loading = false;
+    reload: function(query) {
+      // コレクションをリロード
+      this.in_loading = true;
       this.products = new Products();
       this.list_view = new ProductListView({ collection: this.products });
-      this.listenTo(this.products, 'add', this.afterLoading);
-    },
-
-    afterLoading: function() {
-      this.in_loading = false;
+      this.products.fetch({ data: { query: query }, reset: true, success: _.bind(this._on_after_loading, this) });
     },
 
     next: function() {
-      this.products.next();
+      // コレクションを追加ロード
+      if (!this.in_loading && this._is_touching_bottom()) {
+        this.in_loading = true;
+        this.products.next({ success: _.bind(this._on_after_loading, this) });
+      }
+    },
+
+    _is_touching_bottom: function() {
+      // スクロール位置が底を突いたか検証する。
+      var thisHeight = this.$el.height(),
+      $window = $(window),
+      thisBottom = this.viewTop + thisHeight,
+      nowBottom = $window.scrollTop() + $window.height();
+      if (nowBottom >= (thisBottom + this.touch_threshold)) {
+        return true;
+      }
+      return false;
+    },
+
+    _on_after_loading: function() {
+      // ロード後の処理
+      if (!this.products.is_last_page()) {
+        this.in_loading = false;
+      }
     }
   });
 

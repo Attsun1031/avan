@@ -9,6 +9,10 @@ define(['models/product', 'backbone'], function(Product, Backbone) {
       this.query = '';
     },
 
+    is_last_page: function() {
+      return (this.current_page === this.total_page);
+    },
+
     parse: function(resp) {
       this.current_page = resp.current_page;
       this.total_page = resp.total_page;
@@ -20,8 +24,10 @@ define(['models/product', 'backbone'], function(Product, Backbone) {
       return Backbone.Collection.prototype.fetch.call(this, options);
     },
 
-    next: function() {
-      this.fetch({ data: { query: this.query, page: this.current_page + 1 }, reset: false, remove: false });
+    next: function(options) {
+      options = options !== undefined ? options : {};
+      options = _.extend(options, { data: { query: this.query, page: this.current_page + 1 }, reset: false, remove: false });
+      this.fetch(options);
     }
   });
 
