@@ -6,8 +6,7 @@ class CheckList < ActiveRecord::Base
   attr_accessible :name
 
   def add_item(product, comment = "")
-    item = ListItem.new
-    item.register(self, product, comment)
+    ListItem.register(self, product, comment)
   end
 
   def self.register(user, name)
