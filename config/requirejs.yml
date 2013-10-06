@@ -4,3 +4,6 @@ shim:
     exports: Backbone
   underscore:
     exports: _
+  jquery.ui.all:
+    deps: [jquery]
+    exports: $

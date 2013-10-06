@@ -26,6 +26,12 @@ class ItemSearchController < ApplicationController
   end
 end
 
+class ItemAddController < ApplicationController
+  def add
+    render :json => {:x => 1}
+  end
+end
+
 
 # 検索画面フォーム
 class ItemSearchForm

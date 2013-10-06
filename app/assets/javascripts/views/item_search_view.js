@@ -1,4 +1,4 @@
-define(['models/products', 'backbone'], function(Products) {
+define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
   // TODO: この宣言はまとめたい。
   _.templateSettings = {
     interpolate: /\{\{\=(.+?)\}\}/g,
@@ -30,6 +30,25 @@ define(['models/products', 'backbone'], function(Products) {
   var ProductView = Backbone.View.extend({
     product_template: _.template($("#product_template").html()),
 
+    events: {
+      "click .icons .add-item": "handle_add_item"
+    },
+
+    handle_add_item: function(e) {
+      e.preventDefault();
+      var item_name = this.$el.find('a').html();
+      /*
+       * 疑問点：
+       * Productlistviewは add_item イベントを listen_to で登録していないので、
+       * backbone の trigger を使うとイベントは伝播しない。
+       * ProductlistviewがProductViewを生成するたびに listenToしたら効率悪くなりそうだが、
+       * addEventListenerが呼ばれるわけではないのでそうでもないのだろうか。
+       * まぁでもjsの組み込みのイベントハンドリングの仕組みを使うよりは伝播が遅くなるだろうし、
+       * Productviewが増えるたびにコールバック情報を抱え込むのも徐々にメモリを圧迫しそう。
+       */
+      this.$el.trigger('add_item', item_name);
+    },
+
     render: function() {
       this.$el.html(this.product_template(this.model.toJSON()));
       return this;
@@ -37,12 +56,26 @@ define(['models/products', 'backbone'], function(Products) {
   });
 
 
+  var AddDialogView = Backbone.View.extend({
+    el: "#add_dialog"
+  });
+
+
   var ProductListView = Backbone.View.extend({
     el: "#products_area",
+
+    events: {
+      "add_item": "add_item"
+    },
 
     initialize: function(options) {
       this.listenTo(this.collection, 'reset', this.render);
       this.listenTo(this.collection, 'add', this.render_each_model);
+    },
+
+    add_item: function(e, item_name) {
+      // TODO: チェックリスト選択、コメント追加のモーダルダイアログを表示する。
+      console.log(item_name);
     },
 
     render_each_model: function(product) {
