@@ -4,6 +4,10 @@ require 'amazon'
 
 # 検索画面コントローラー
 class ItemSearchController < ApplicationController
+  def index
+    @check_lists = CheckList.where(:user_id => session[:login_user_id])
+  end
+
   def search
     # TODO: エラーのときも json で返す
     form = ItemSearchForm.new(params)

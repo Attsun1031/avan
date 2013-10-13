@@ -56,26 +56,45 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
   });
 
 
-  var AddDialogView = Backbone.View.extend({
-    el: "#add_dialog"
+  var AddItemDialog = Backbone.View.extend({
+    el: "#add-item-dialog",
+
+    initialize: function(options) {
+      var $self = this.$el;
+      this.$target_item = $("#target-item");
+      this.$el.dialog({
+        autoOpen: false,
+        height: 330,
+        width: 400,
+        modal: true,
+        buttons: {
+          "追加する": function() {
+            // TODO: 追加APIをコントローラーに投げる
+            // モデルを介したほうがいいだろう。
+            console.log($("#comment").val());
+            console.log($("#checklists").val());
+            console.log($("#target-item").text());
+          },
+          "キャンセル": function() {
+            $self.dialog("close");
+          }
+        }
+      });
+    },
+
+    handle_add_item: function(item_name) {
+      this.$target_item.text(item_name);
+      this.$el.dialog("open");
+    }
   });
 
 
   var ProductListView = Backbone.View.extend({
     el: "#products_area",
 
-    events: {
-      "add_item": "add_item"
-    },
-
     initialize: function(options) {
       this.listenTo(this.collection, 'reset', this.render);
       this.listenTo(this.collection, 'add', this.render_each_model);
-    },
-
-    add_item: function(e, item_name) {
-      // TODO: チェックリスト選択、コメント追加のモーダルダイアログを表示する。
-      console.log(item_name);
     },
 
     render_each_model: function(product) {
@@ -101,8 +120,13 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
 
     touch_threshold: 35,
 
+    events: {
+      "add_item": "add_item2list"
+    },
+
     initialize: function(options) {
       this.form = new SearchFormView();
+      this.add_item_dialog = new AddItemDialog();
       this.listenTo(this.form, "submit_search_form", this.reload);
       this.products = [];
       this.list_view = undefined;
@@ -126,6 +150,10 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
         this.in_loading = true;
         this.products.next({ success: _.bind(this._on_after_loading, this) });
       }
+    },
+
+    add_item2list: function(e, item_name) {
+      this.add_item_dialog.handle_add_item(item_name);
     },
 
     _is_touching_bottom: function() {
