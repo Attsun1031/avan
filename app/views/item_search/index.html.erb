@@ -21,6 +21,7 @@
       <%= select_tag("checklists", options_from_collection_for_select(@check_lists, :id, :name)) %>
       <label for="comment">コメント</label>
       <%= text_field_tag :comment, '',{ :class => 'input-medium' } %>
+      <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
     <% end %>
   </div>
 </div>

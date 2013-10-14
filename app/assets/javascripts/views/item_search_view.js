@@ -1,4 +1,4 @@
-define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
+define(['models/products', 'models/list_item', 'backbone', 'jquery.ui.all'], function(Products, ListItem) {
   // TODO: この宣言はまとめたい。
   _.templateSettings = {
     interpolate: /\{\{\=(.+?)\}\}/g,
@@ -36,7 +36,6 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
 
     handle_add_item: function(e) {
       e.preventDefault();
-      var item_name = this.$el.find('a').html();
       /*
        * 疑問点：
        * Productlistviewは add_item イベントを listen_to で登録していないので、
@@ -46,7 +45,7 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
        * まぁでもjsの組み込みのイベントハンドリングの仕組みを使うよりは伝播が遅くなるだろうし、
        * Productviewが増えるたびにコールバック情報を抱え込むのも徐々にメモリを圧迫しそう。
        */
-      this.$el.trigger('add_item', item_name);
+      this.$el.trigger('add_item', this.model.toJSON());
     },
 
     render: function() {
@@ -60,8 +59,11 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
     el: "#add-item-dialog",
 
     initialize: function(options) {
-      var $self = this.$el;
+      var self = this;
       this.$target_item = $("#target-item");
+      this.current_item = undefined;
+
+      // ダイアログの初期化
       this.$el.dialog({
         autoOpen: false,
         height: 330,
@@ -69,21 +71,33 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
         modal: true,
         buttons: {
           "追加する": function() {
-            // TODO: 追加APIをコントローラーに投げる
-            // モデルを介したほうがいいだろう。
-            console.log($("#comment").val());
-            console.log($("#checklists").val());
-            console.log($("#target-item").text());
+            var list = new ListItem();
+            list.set({
+              "comment": $("#comment").val(),
+              "product": self.current_item,
+              "check_list_id": $("#checklists").val(),
+              "authenticity_token": $("#authenticity_token", self.$el).val()
+            });
+            list.save(null, {
+              "success": function() {console.log("success");},
+              "error": function() {console.log("error");}
+            });
           },
           "キャンセル": function() {
-            $self.dialog("close");
+            self.$el.dialog("close");
+            self.current_item = undefined;
           }
         }
       });
     },
 
-    handle_add_item: function(item_name) {
-      this.$target_item.text(item_name);
+    _setup_dialog: function() {
+      this.$target_item.text(this.current_item.title);
+    },
+
+    handle_add_item: function(item) {
+      this.current_item = item;
+      this._setup_dialog();
       this.$el.dialog("open");
     }
   });
@@ -152,8 +166,8 @@ define(['models/products', 'backbone', 'jquery.ui.all'], function(Products) {
       }
     },
 
-    add_item2list: function(e, item_name) {
-      this.add_item_dialog.handle_add_item(item_name);
+    add_item2list: function(e, item) {
+      this.add_item_dialog.handle_add_item(item);
     },
 
     _is_touching_bottom: function() {

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130818101822) do
+ActiveRecord::Schema.define(:version => 20131014171505) do
 
   create_table "check_lists", :force => true do |t|
     t.integer  "user_id"
@@ -77,5 +77,8 @@ ActiveRecord::Schema.define(:version => 20130818101822) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
   end
+
+  add_foreign_key "list_items", "check_lists", name: "list_items_ibfk_1"
+  add_foreign_key "list_items", "products", name: "list_items_ibfk_2"
 
 end
