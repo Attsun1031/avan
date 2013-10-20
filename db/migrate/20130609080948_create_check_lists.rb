@@ -7,5 +7,6 @@ class CreateCheckLists < ActiveRecord::Migration
       t.timestamps
     end
     add_index :check_lists, :user_id
+    add_index :check_lists, [:user_id, :name], :unique => true
   end
 end

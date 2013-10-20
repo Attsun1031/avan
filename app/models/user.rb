@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   validates :name, :presence => { :message => 'ユーザー名を入力してください。' }
   validates :password_digest, :presence => { :message => 'パスワードを入力してください。' }
 
-  def self.authenticate user_name, password
+  def self.authenticate(user_name, password)
     digest = self.create_digest password
     user = where(:name => user_name, :password_digest => digest)
     if user != nil and user.length > 0
@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.create_new_user params
+  def self.create_new_user(params)
     user = self.new
     user.name = params[:name]
     user.birthday = params[:birthday]
@@ -27,8 +27,16 @@ class User < ActiveRecord::Base
     return user
   end
 
+  def save_new_user(user)
+    User.transaction do
+      user.save!
+      CheckList.register(user.id, "新しいリスト")
+    end
+    # TODO: トランザクション失敗時の例外処理
+  end
+
   protected
-  def self.create_digest password
+  def self.create_digest(password)
     if password.blank?
       return nil
     end

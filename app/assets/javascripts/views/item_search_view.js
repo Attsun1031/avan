@@ -76,13 +76,23 @@ define(['models/products', 'models/list_item', 'backbone', 'jquery.ui.all'], fun
     },
 
     _submit: function() {
-      var list = new ListItem();
+      var list = new ListItem(), list_product = {};
+
+      // 更新用 product json から null 項目は除く
+      // 通信量削減 && rails で モデルの id に nil をセットすることによる例外の回避用。
+      _.each(_.keys(this.current_item), _.bind(function(k) {
+        if (this.current_item[k] !== null) {
+          list_product[k] = this.current_item[k];
+        }
+      }, this));
+
       list.set({
         "comment": $("#comment").val(),
-        "product": this.current_item,
+        "product": list_product,
         "check_list_id": $("#checklists").val(),
         "authenticity_token": $("#authenticity_token", this.$el).val()
       });
+
       list.save(null, {
         "success": _.bind(function(model, response) {
           this.$el.dialog("close");
@@ -138,11 +148,10 @@ define(['models/products', 'models/list_item', 'backbone', 'jquery.ui.all'], fun
     render: function(products) {
       // アイテムを空にした上でレンダリング
       // TODO: response の妥当性をチェックする
-      var self = this;
       this.$el.empty();
-      products.each(function(product) {
-        self.render_each_model(product);
-      });
+      products.each(_.bind(function(product) {
+        this.render_each_model(product);
+      }, this));
     }
   });
 

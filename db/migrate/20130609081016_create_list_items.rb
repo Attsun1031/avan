@@ -9,7 +9,6 @@ class CreateListItems < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :list_items, :check_list_id
-    add_index :list_items, :product_id
+    add_index :list_items, [:check_list_id, :product_id], :unique => true
   end
 end

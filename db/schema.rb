@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(:version => 20131014171505) do
     t.datetime "updated_at", :null => false
   end
 
+  add_index "check_lists", ["user_id", "name"], :name => "index_check_lists_on_user_id_and_name", :unique => true
   add_index "check_lists", ["user_id"], :name => "index_check_lists_on_user_id"
 
   create_table "list_items", :force => true do |t|
@@ -32,8 +33,8 @@ ActiveRecord::Schema.define(:version => 20131014171505) do
     t.datetime "updated_at",    :null => false
   end
 
-  add_index "list_items", ["check_list_id"], :name => "index_list_items_on_check_list_id"
-  add_index "list_items", ["product_id"], :name => "index_list_items_on_product_id"
+  add_index "list_items", ["check_list_id", "product_id"], :name => "index_list_items_on_check_list_id_and_product_id", :unique => true
+  add_index "list_items", ["product_id"], :name => "product_id"
 
   create_table "products", :force => true do |t|
     t.string   "asin",            :null => false
@@ -49,19 +50,7 @@ ActiveRecord::Schema.define(:version => 20131014171505) do
     t.datetime "updated_at",      :null => false
   end
 
-  add_index "products", ["asin"], :name => "index_products_on_asin"
-
-  create_table "rack_items", :force => true do |t|
-    t.integer  "user_id",                 :null => false
-    t.integer  "album_id",                :null => false
-    t.text     "review"
-    t.integer  "evaluation", :limit => 1
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
-  end
-
-  add_index "rack_items", ["album_id"], :name => "index_rack_items_on_album_id"
-  add_index "rack_items", ["user_id"], :name => "index_rack_items_on_user_id"
+  add_index "products", ["asin"], :name => "index_products_on_asin", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "name"
@@ -78,7 +67,7 @@ ActiveRecord::Schema.define(:version => 20131014171505) do
     t.datetime "updated_at",                       :null => false
   end
 
-  add_foreign_key "list_items", "check_lists", name: "list_items_ibfk_1"
-  add_foreign_key "list_items", "products", name: "list_items_ibfk_2"
+  add_index "users", ["mail_address"], :name => "index_users_on_mail_address", :unique => true
+  add_index "users", ["name"], :name => "index_users_on_name", :unique => true
 
 end
