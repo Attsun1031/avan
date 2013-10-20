@@ -59,7 +59,6 @@ define(['models/products', 'models/list_item', 'backbone', 'jquery.ui.all'], fun
     el: "#add-item-dialog",
 
     initialize: function(options) {
-      var self = this;
       this.$target_item = $("#target-item");
       this.current_item = undefined;
 
@@ -70,29 +69,48 @@ define(['models/products', 'models/list_item', 'backbone', 'jquery.ui.all'], fun
         width: 400,
         modal: true,
         buttons: {
-          "追加する": function() {
-            var list = new ListItem();
-            list.set({
-              "comment": $("#comment").val(),
-              "product": self.current_item,
-              "check_list_id": $("#checklists").val(),
-              "authenticity_token": $("#authenticity_token", self.$el).val()
-            });
-            list.save(null, {
-              "success": function() {console.log("success");},
-              "error": function() {console.log("error");}
-            });
-          },
-          "キャンセル": function() {
-            self.$el.dialog("close");
-            self.current_item = undefined;
-          }
+          "追加する": _.bind(this._submit, this),
+          "キャンセル": _.bind(this._cancel, this)
         }
       });
     },
 
+    _submit: function() {
+      var list = new ListItem();
+      list.set({
+        "comment": $("#comment").val(),
+        "product": this.current_item,
+        "check_list_id": $("#checklists").val(),
+        "authenticity_token": $("#authenticity_token", this.$el).val()
+      });
+      list.save(null, {
+        "success": _.bind(function(model, response) {
+          this.$el.dialog("close");
+          console.log("sucess");
+          this._clear();
+        }, this),
+        "error": _.bind(function(model, response) {
+          this.$el.dialog("close");
+          this._clear();
+          console.log("error");
+        }, this)
+      });
+    },
+
+    _cancel: function() {
+      this.$el.dialog("close");
+      this.current_item = undefined;
+      this._clear();
+    },
+
     _setup_dialog: function() {
       this.$target_item.text(this.current_item.title);
+    },
+
+    _clear: function() {
+      this.current_item = undefined;
+      this.$target_item.text("");
+      $("#comment", this.$el).val("");
     },
 
     handle_add_item: function(item) {
