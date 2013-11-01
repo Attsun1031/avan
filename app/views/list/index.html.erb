@@ -1,0 +1,22 @@
+<div id="list">
+<% @list_items.each do |item| %>
+  <div class="row-fluid list-item">
+    <div class="span3">
+      <%= image_tag(item.image_path, :class => "img-polaroid") %>
+    </div>
+    <div class="span8">
+      <div>
+        <%= link_to(item.title, item.item_url) %>
+      </div>
+      <div>
+        <%= [item.creater_name, item.publisher, item.release_date].join("/") %>
+      </div>
+      <div class="icons pull-right">
+        <button type="button" class="btn btn-default btn-lg add-item">
+          <i class="icon-plus"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+<% end %>
+</div>
