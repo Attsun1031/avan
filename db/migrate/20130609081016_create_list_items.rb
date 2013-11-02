@@ -3,7 +3,7 @@ class CreateListItems < ActiveRecord::Migration
     create_table :list_items do |t|
       t.references :check_list
       t.references :product
-      t.boolean :checked
+      t.boolean :checked, :default => false
       t.text :comment
       t.string :image_path
 

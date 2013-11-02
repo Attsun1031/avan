@@ -7,9 +7,11 @@ class ListItem < ActiveRecord::Base
   attr_accessible :checked, :comment, :image_path
 
   scope :with_products, joins('inner join products on list_items.product_id = products.id')
-  scope :select_for_list, select('
+  # コンテンツに関する情報列のみ抜き出す。
+  scope :select_contents_info, select('
     list_items.comment,
     list_items.image_path,
+    list_items.checked,
     products.category,
     products.creater_name,
     products.item_url,
@@ -18,6 +20,7 @@ class ListItem < ActiveRecord::Base
     products.release_date'
   )
 
+  # 新しいアイテムをリストい追加
   def self.register(check_list_id, product_attr, comment)
     ListItem.transaction do
       # 未登録の product なら保存
@@ -39,7 +42,11 @@ class ListItem < ActiveRecord::Base
   end
 
   # プロダクト情報を付加した状態でロードする。
-  def self.find_with_products(check_list_id, offset, limit = 20)
-    ListItem.where(:check_list_id => check_list_id).with_products.select_for_list.limit(limit).offset(offset)
+  def self.find_with_products(check_list_id, only_unchecked = true, offset = 0, limit = 20)
+    params = { :check_list_id => check_list_id }
+    if only_unchecked
+      params[:checked] = false
+    end
+    ListItem.where(params).with_products.select_contents_info.limit(limit).offset(offset)
   end
 end

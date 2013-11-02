@@ -27,10 +27,10 @@ class User < ActiveRecord::Base
     return user
   end
 
-  def save_new_user(user)
+  def register
     User.transaction do
-      user.save!
-      CheckList.register(user.id, "新しいリスト")
+      save!
+      CheckList.register(self.id, "新しいリスト")
     end
     # TODO: トランザクション失敗時の例外処理
   end

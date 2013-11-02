@@ -41,7 +41,7 @@ class UserRegisterController < ApplicationController
 
     # 念のためもう一度バリデーション
     if validate_input session[:register_user]
-      User.save_new_user(session[:register_user])
+      session[:register_user].register
     end
     session[:register_user] = nil
   end

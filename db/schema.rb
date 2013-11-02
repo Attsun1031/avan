@@ -26,11 +26,11 @@ ActiveRecord::Schema.define(:version => 20131014171505) do
   create_table "list_items", :force => true do |t|
     t.integer  "check_list_id"
     t.integer  "product_id"
-    t.boolean  "checked"
+    t.boolean  "checked",       :default => false
     t.text     "comment"
     t.string   "image_path"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
   add_index "list_items", ["check_list_id", "product_id"], :name => "index_list_items_on_check_list_id_and_product_id", :unique => true
