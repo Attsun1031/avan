@@ -1,4 +1,4 @@
-define(['models/products', 'models/list_item', 'views/helpers/mugen_loader', 'backbone', 'jquery.ui.all'], function(Products, ListItem, MugenLoader) {
+define(['models/products', 'models/list_item', 'backbone', 'jquery.ui.all'], function(Products, ListItem) {
   // TODO: この宣言はまとめたい。
   _.templateSettings = {
     interpolate: /\{\{\=(.+?)\}\}/g,
@@ -64,38 +64,21 @@ define(['models/products', 'models/list_item', 'views/helpers/mugen_loader', 'ba
 
       // ダイアログの初期化
       this.$el.dialog({
-        autoOpen : false,
-        height   : 330,
-        width    : 400,
-        modal    : true,
-        buttons  : {
-          "追加する"   : _.bind(this._submit, this),
-          "キャンセル" : _.bind(this._cancel, this)
+        autoOpen: false,
+        height: 330,
+        width: 400,
+        modal: true,
+        buttons: {
+          "追加する": _.bind(this._submit, this),
+          "キャンセル": _.bind(this._cancel, this)
         }
       });
     },
 
     _submit: function() {
-      var list = this._build_list_obj();
-      list.save(null, {
-        "success": _.bind(function(model, response) {
-          this.$el.dialog("close");
-          this._clear();
-        }, this),
-        "error": _.bind(function(model, response) {
-          this.$el.dialog("close");
-          this._clear();
-        }, this)
-      });
-    },
-
-    _build_list_obj: function() {
-      /*
-       * 更新用のリストアイテムオブジェクトを生成する。
-       */
       var list = new ListItem(), list_product = {};
 
-      // 更新用 product 情報から null 項目は除く。
+      // 更新用 product json から null 項目は除く
       // 通信量削減 && rails で モデルの id に nil をセットすることによる例外の回避用。
       _.each(_.keys(this.current_item), _.bind(function(k) {
         if (this.current_item[k] !== null) {
@@ -110,7 +93,18 @@ define(['models/products', 'models/list_item', 'views/helpers/mugen_loader', 'ba
         "authenticity_token": $("#authenticity_token", this.$el).val()
       });
 
-      return list;
+      list.save(null, {
+        "success": _.bind(function(model, response) {
+          this.$el.dialog("close");
+          console.log("sucess");
+          this._clear();
+        }, this),
+        "error": _.bind(function(model, response) {
+          this.$el.dialog("close");
+          this._clear();
+          console.log("error");
+        }, this)
+      });
     },
 
     _cancel: function() {
@@ -155,14 +149,21 @@ define(['models/products', 'models/list_item', 'views/helpers/mugen_loader', 'ba
       // アイテムを空にした上でレンダリング
       // TODO: response の妥当性をチェックする
       this.$el.empty();
-      products.each(_.bind(this.render_each_model, this));
+      products.each(_.bind(function(product) {
+        this.render_each_model(product);
+      }, this));
     }
   });
 
-  var ItemSearchView = Backbone.View.extend({
-    el: "#item_search",
 
-    events: { "add_item": "add_item2list" },
+  var ListView = Backbone.View.extend({
+    el: "#list",
+
+    touch_threshold: 35,
+
+    events: {
+      "add_item": "add_item2list"
+    },
 
     initialize: function(options) {
       this.form = new SearchFormView();
@@ -170,42 +171,51 @@ define(['models/products', 'models/list_item', 'views/helpers/mugen_loader', 'ba
       this.listenTo(this.form, "submit_search_form", this.reload);
       this.products = [];
       this.list_view = undefined;
-      this.mugen_loader = undefined;
+      this.in_loading = false;
+      this.viewTop = this.$el.offset().top;
+
+      $(window).scroll(_.bind(this.next, this));
     },
 
     reload: function(query) {
-      /*
-       * アイテムをリロードする。
-       * 無限ローダーも初期化される。
-       */
-      this.mugen_loader = new MugenLoader({
-        on_next : _.bind(this.next, this),
-        $view   : this.$el
-      });
+      // コレクションをリロード
+      this.in_loading = true;
       this.products = new Products();
       this.list_view = new ProductListView({ collection: this.products });
-      this.products.fetch({
-        data    : { query : query },
-        reset   : true,
-        success : _.bind(this.mugen_loader.start, this.mugen_loader)
-      });
+      this.products.fetch({ data: { query: query }, reset: true, success: _.bind(this._on_after_loading, this) });
     },
 
     next: function() {
-      this.products.next({ success: _.bind(this.on_after_loading, this) });
+      // コレクションを追加ロード
+      if (!this.in_loading && this._is_touching_bottom()) {
+        this.in_loading = true;
+        this.products.next({ success: _.bind(this._on_after_loading, this) });
+      }
     },
 
     add_item2list: function(e, item) {
       this.add_item_dialog.handle_add_item(item);
     },
 
-    on_after_loading: function() {
+    _is_touching_bottom: function() {
+      // スクロール位置が底を突いたか検証する。
+      var thisHeight = this.$el.height(),
+      $window = $(window),
+      thisBottom = this.viewTop + thisHeight,
+      nowBottom = $window.scrollTop() + $window.height();
+      if (nowBottom >= (thisBottom + this.touch_threshold)) {
+        return true;
+      }
+      return false;
+    },
+
+    _on_after_loading: function() {
+      // ロード後の処理
       if (!this.products.is_last_page()) {
-        // まだアイテムがあればロードを再会する。
-        this.mugen_loader.resume();
+        this.in_loading = false;
       }
     }
   });
 
-  return ItemSearchView;
+  return ListView;
 });
