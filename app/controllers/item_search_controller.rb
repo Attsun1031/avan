@@ -17,6 +17,7 @@ class ItemSearchController < ApplicationController
       render :json => build_json_response(api_results)
     elsif
       flash.now[:error] = item_search_params.errors.messages.values.collect { |e| e[0] }
+      logger.debug flash.now[:error]
       render :action => :index
     end
   end

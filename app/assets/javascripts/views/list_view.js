@@ -45,16 +45,24 @@ define(['models/list_items', 'models/list_item', 'views/helpers/mugen_loader', '
 
 
   var ListItemsView = Backbone.View.extend({
-    el: "#list_items_area",
+    el: "#list_item_area",
 
     initialize: function(options) {
       this.listenTo(this.collection, 'add', this.render_each_model);
+      this.listenTo(this.collection, 'reset', this.render);
     },
 
     render_each_model: function(list_item) {
       // 各アイテムのレンダリング
       var list_item_view = new ListItemView({ model: list_item });
       this.$el.append(list_item_view.render().el);
+    },
+
+    render: function(list_items) {
+      // アイテムを空にした上でレンダリング
+      // TODO: response の妥当性をチェックする
+      this.$el.empty();
+      list_items.each(_.bind(this.render_each_model, this));
     }
   });
 

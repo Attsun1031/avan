@@ -7,7 +7,7 @@ class ListController < ApplicationController
   end
 
   def search
-    item_search_params = ItemSearchParams.new(params)
+    item_search_params = ListItemSearchParams.new(params)
     logger.debug params
     if item_search_params.valid?
       results, has_more_item  = ListItem.find_with_products(
@@ -36,7 +36,7 @@ end
 
 
 # 検索画面フォーム
-class ItemSearchParams
+class ListItemSearchParams
   include ActiveModel::Validations
 
   attr_accessor :check_list_id, :offset, :limit
