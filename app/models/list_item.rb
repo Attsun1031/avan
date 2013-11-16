@@ -6,18 +6,18 @@ class ListItem < ActiveRecord::Base
   belongs_to :product
   attr_accessible :checked, :comment, :image_path
 
-  scope :with_products, joins('inner join products on list_items.product_id = products.id')
+  scope :with_products, joins(:product)
   # コンテンツに関する情報列のみ抜き出す。
   scope :select_contents_info, select('
-    list_items.comment,
-    list_items.image_path,
-    list_items.checked,
-    products.category,
-    products.creater_name,
-    products.item_url,
-    products.title,
-    products.publisher,
-    products.release_date'
+    list_items.comment as comment,
+    list_items.image_path as image_path,
+    list_items.checked as checked,
+    products.category as category,
+    products.creater_name as creater_name,
+    products.item_url as item_url,
+    products.title as title,
+    products.publisher as publisher,
+    products.release_date as release_date'
   )
 
   # 新しいアイテムをリストい追加
@@ -47,6 +47,8 @@ class ListItem < ActiveRecord::Base
     if only_unchecked
       params[:checked] = false
     end
-    ListItem.where(params).with_products.select_contents_info.limit(limit).offset(offset)
+    res = ListItem.where(params).with_products.select_contents_info.limit(limit + 1).offset(offset)
+    has_more_item = res.length > limit
+    return res[0, limit - 1], has_more_item
   end
 end
