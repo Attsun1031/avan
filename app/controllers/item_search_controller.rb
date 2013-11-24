@@ -5,7 +5,7 @@ require 'amazon'
 # 検索画面コントローラー
 class ItemSearchController < ApplicationController
   def index
-    @check_lists = CheckList.where(:user_id => session[:login_user_id])
+    @check_lists = CheckList.where(:user_id => session[:login_user_id]).order('id asc')
   end
 
   # アイテムの検索

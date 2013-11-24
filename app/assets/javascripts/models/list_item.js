@@ -1,6 +1,6 @@
 define(['backbone'], function() {
   var ListItem = Backbone.Model.extend({
-    url: '/item_search/add',
+    urlRoot: '/list',
 
     default: function() {
       return {
@@ -8,6 +8,11 @@ define(['backbone'], function() {
         'product': undefined,
         'comment': ''
       };
+    },
+
+    check: function(item, attrs) {
+      attrs.checked = true;
+      item.save(attrs, { patch: true });
     }
   });
   return ListItem;

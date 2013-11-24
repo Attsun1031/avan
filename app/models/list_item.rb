@@ -9,6 +9,7 @@ class ListItem < ActiveRecord::Base
   scope :with_products, joins(:product)
   # コンテンツに関する情報列のみ抜き出す。
   scope :select_contents_info, select('
+    list_items.id as id,
     list_items.comment as comment,
     list_items.image_path as image_path,
     list_items.checked as checked,
