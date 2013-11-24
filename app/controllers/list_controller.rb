@@ -3,7 +3,7 @@
 # リスト画面コントローラー
 class ListController < ApplicationController
   def index
-    @check_lists = CheckList.where(:user_id => session[:login_user_id])
+    @check_lists = CheckList.where(:user_id => session[:login_user_id]).order("id asc")
   end
 
   def search

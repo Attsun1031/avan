@@ -9,19 +9,17 @@ define(['models/list_items', 'models/list_item', 'views/helpers/mugen_loader', '
     el: "#list div.check_list_form_area",
 
     events: {
-      "submit #search_form": "handle_submit"
+      "change #check_lists": "handle_select"
     },
 
     initialize: function(options) {
       this.$check_lists = $("#check_lists");
     },
 
-    handle_submit: function(e) {
-      e.preventDefault();
-
+    handle_select: function() {
       var check_list_id = this.$check_lists.val();
       if (!_.isEmpty(check_list_id)) {
-        this.trigger('submit_search_form', check_list_id);
+        this.trigger('select_check_list', check_list_id);
       }
     }
   });
@@ -74,10 +72,11 @@ define(['models/list_items', 'models/list_item', 'views/helpers/mugen_loader', '
 
     initialize: function(options) {
       this.form = new SearchFormView();
-      this.listenTo(this.form, "submit_search_form", this.reload);
+      this.listenTo(this.form, "select_check_list", this.reload);
       this.list_items = [];
       this.list_view = undefined;
       this.mugen_loader = undefined;
+      this.form.handle_select();
     },
 
     reload: function(check_list_id) {
