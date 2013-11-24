@@ -28,11 +28,13 @@ define(['models/list_items', 'models/list_item', 'views/helpers/mugen_loader', '
   var ListItemView = Backbone.View.extend({
     list_item_template: _.template($("#list_item_template").html()),
 
-    events: { "click .icons .add-item": "handle_add_item" },
+    events: { "click .icons .check-item": "handle_check_item" },
 
-    handle_add_item: function(e) {
+    handle_check_item: function(e) {
       e.preventDefault();
-      this.$el.trigger('add_item', this.model.toJSON());
+      $(".check-item", this.$el).prop('disabled', true);
+      this.$el.trigger('check-item', this.model);
+      this.$el.fadeOut();
     },
 
     render: function() {
@@ -68,7 +70,7 @@ define(['models/list_items', 'models/list_item', 'views/helpers/mugen_loader', '
   var ListView = Backbone.View.extend({
     el: "#list",
 
-    events: { "add_item": "add_item2list" },
+    events: { "check-item": "check_item" },
 
     initialize: function(options) {
       this.form = new SearchFormView();
@@ -105,6 +107,12 @@ define(['models/list_items', 'models/list_item', 'views/helpers/mugen_loader', '
         // まだアイテムがあればロードを再開する。
         this.mugen_loader.resume();
       }
+    },
+
+    check_item: function(e, item) {
+      var attrs = {};
+      attrs[$("meta[name=csrf-param]").attr('content')] = $("meta[name=csrf-token]").attr('content');
+      item.check(item, attrs);
     }
   });
 

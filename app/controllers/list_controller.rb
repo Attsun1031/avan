@@ -6,6 +6,12 @@ class ListController < ApplicationController
     @check_lists = CheckList.where(:user_id => session[:login_user_id]).order("id asc")
   end
 
+  def update
+    list_item = ListItem.find(params[:id], :lock => true)
+    list_item.update_attributes(params[:list])
+    render :json => { :updated_item_id => params[:id] }
+  end
+
   def search
     item_search_params = ListItemSearchParams.new(params)
     logger.debug params
