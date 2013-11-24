@@ -4,7 +4,7 @@ define(['models/list_item', 'backbone'], function(ListItem, Backbone) {
     url: '/list/search',
 
     initialize: function(check_list_id) {
-      this.current_offset = 0;
+      this.current_offset = -1;
       this.has_more_item = true;
       this.limit = 20;
       this.check_list_id = check_list_id;
