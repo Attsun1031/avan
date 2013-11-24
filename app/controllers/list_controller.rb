@@ -3,7 +3,7 @@
 # リスト画面コントローラー
 class ListController < ApplicationController
   def index
-    @check_lists = CheckList.where(:user_id => session[:login_user_id])
+    @check_lists = CheckList.where(:user_id => session[:login_user_id]).order("id asc")
   end
 
   def search
@@ -47,7 +47,7 @@ class ListItemSearchParams
 
   def initialize(params = {})
     @check_list_id = params[:check_list_id]
-    @offset = params.fetch(:offset, 1).to_i
+    @offset = params.fetch(:offset, 0).to_i
     @limit = params.fetch(:limit, 1).to_i
   end
 end

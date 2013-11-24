@@ -6,7 +6,6 @@
   <div class="container check_list_form_area">
     <%= form_tag({}, { :id => "search_form" }) do %>
       <%= select_tag("check_lists", options_from_collection_for_select(@check_lists, :id, :name)) %>
-      <%= submit_tag "検索", { :id => 'search_btn', :class => "btn" } %>
     <% end %>
   </div>
   <div id="list_item_area">
