@@ -29,6 +29,15 @@ class ListItem < ActiveRecord::Base
       if product == nil
         product = Product.new(product_attr)
         product.save!
+      else
+        # すでに登録済みのリストがあれば、フラグを更新して終了
+        list = ListItem.find_by_check_list_id_and_product_id(check_list_id, product.id)
+        if list != nil
+          list.checked = false
+          list.comment = comment
+          list.save!
+          return list
+        end
       end
 
       list = self.new
