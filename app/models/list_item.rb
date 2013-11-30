@@ -21,7 +21,7 @@ class ListItem < ActiveRecord::Base
     products.release_date as release_date'
   )
 
-  # 新しいアイテムをリストい追加
+  # 新しいアイテムをリストに追加
   def self.register(check_list_id, product_attr, comment)
     ListItem.transaction do
       # 未登録の product なら保存
