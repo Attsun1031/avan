@@ -10,9 +10,9 @@ define(['backbone'], function() {
       };
     },
 
-    check: function(item, attrs) {
+    check: function(attrs) {
       attrs.checked = true;
-      item.save(attrs, { patch: true });
+      this.save(attrs, { patch: true });
     }
   });
   return ListItem;

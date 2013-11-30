@@ -6,6 +6,22 @@ class ListController < ApplicationController
     @check_lists = CheckList.where(:user_id => session[:login_user_id]).order("id asc")
   end
 
+  # アイテムをリストへ追加
+  def create
+    item_add_params = ItemAddParams.new(params)
+    if item_add_params.valid?
+      res = ListItem.register(
+        item_add_params.check_list_id,
+        item_add_params.product,
+        item_add_params.comment
+      )
+      render :json => { :list_item_id => res.id }
+    elsif
+      error_msgs = item_add_params.errors.messages.values.collect { |e| e[0] }
+      render :json => { :error => error_msgs }
+    end
+  end
+
   def update
     list_item = ListItem.find(params[:id], :lock => true)
     list_item.update_attributes(params[:list])
@@ -58,3 +74,16 @@ class ListItemSearchParams
   end
 end
 
+
+# アイテム追加フォーム
+class ItemAddParams
+  include ActiveModel::Validations
+
+  attr_accessor :product, :comment, :check_list_id
+
+  def initialize(params = {})
+    @comment = params[:comment]
+    @product = params[:product]
+    @check_list_id = params[:check_list_id]
+  end
+end
