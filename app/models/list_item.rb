@@ -24,9 +24,9 @@ class ListItem < ActiveRecord::Base
   # 新しいアイテムをリストに追加
   def self.register(check_list_id, product_attr, comment)
     ListItem.transaction do
-      # 未登録の product なら保存
       product = Product.find_by_asin(product_attr[:asin])
       if product == nil
+        # 未登録の product なら保存
         product = Product.new(product_attr)
         product.save!
       else
