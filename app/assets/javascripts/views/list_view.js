@@ -112,7 +112,7 @@ define(['models/list_items', 'models/list_item', 'views/helpers/mugen_loader', '
     check_item: function(e, item) {
       var attrs = {};
       attrs[$("meta[name=csrf-param]").attr('content')] = $("meta[name=csrf-token]").attr('content');
-      item.check(item, attrs);
+      item.check(attrs);
     }
   });
 

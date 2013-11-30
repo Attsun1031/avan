@@ -22,22 +22,6 @@ class ItemSearchController < ApplicationController
     end
   end
 
-  # アイテムをリストへ追加
-  def add
-    item_add_params = ItemAddParams.new(params)
-    if item_add_params.valid?
-      res = ListItem.register(
-        item_add_params.check_list_id,
-        item_add_params.product,
-        item_add_params.comment
-      )
-      render :json => { :list_item_id => res.id }
-    elsif
-      error_msgs = item_add_params.errors.messages.values.collect { |e| e[0] }
-      render :json => { :error => error_msgs }
-    end
-  end
-
   private
   def build_json_response(api_results)
     return {
@@ -60,19 +44,5 @@ class ItemSearchParams
   def initialize(params = {})
     @query = params[:query]
     @page = params.fetch(:page, 1)
-  end
-end
-
-
-# アイテム追加フォーム
-class ItemAddParams
-  include ActiveModel::Validations
-
-  attr_accessor :product, :comment, :check_list_id
-
-  def initialize(params = {})
-    @comment = params[:comment]
-    @product = params[:product]
-    @check_list_id = params[:check_list_id]
   end
 end
